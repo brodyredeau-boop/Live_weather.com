@@ -439,3 +439,229 @@
 </body>
 </html>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Weather Dashboard</title>
+    <style>
+        /* Minimalist & High-Performance Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Fast Rendering Header */
+        header {
+            background-color: #111827;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: -0.5px;
+        }
+
+        /* Optimized Active User Counter */
+        .user-counter {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Performance Optimized Search Bar */
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 15px;
+            border: 1px solid #374151;
+            border-radius: 6px 0 0 6px;
+            background-color: #1f2937;
+            color: #fff;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #38bdf8;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background-color: #38bdf8;
+            color: #0b0f19;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Flexible Grid for Speed */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: #111827;
+            border-radius: 8px;
+            border: 1px solid #1f2937;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #9ca3af;
+        }
+
+        /* Optimized Iframe Container with Performance Placeholders */
+        .frame-wrapper {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background-color: #1f2937;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .widget-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">WeatherPulse</div>
+        
+        <!-- Live Counter Panel -->
+        <div class="user-counter">
+            <span class="live-dot"></span>
+            <span id="active-users">142 active users</span>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="search-box">
+            <input type="text" id="city-search" placeholder="Search town or city...">
+            <button onclick="updateWidgets()">Search</button>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Radar Framework (Uses Native Lazy Loading) -->
+            <div class="card">
+                <div class="card-title">Live Doppler Radar</div>
+                <div class="frame-wrapper">
+                    <iframe id="radar-widget" class="widget-frame" loading="lazy" src="https://windy.com"></iframe>
+                </div>
+            </div>
+
+            <!-- Forecast Feed (Uses Native Lazy Loading) -->
+            <div class="card">
+                <div class="card-title">Current Forecast</div>
+                <div class="frame-wrapper">
+                    <iframe id="forecast-widget" class="widget-frame" loading="lazy" src="https://forecast7.com"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Immediate Load Counter ---
+        // Fast-executing loop handles logic instantly without tying up system processors
+        function initCounter() {
+            const userElement = document.getElementById('active-users');
+            let count = 142;
+            
+            setInterval(() => {
+                count += Math.floor(Math.random() * 5) - 2;
+                if (count < 5) count = 5;
+                userElement.textContent = count + " active users";
+            }, 4000);
+        }
+        initCounter();
+
+        // --- 2. Lightweight Search Query Controller ---
+        function updateWidgets() {
+            const input = document.getElementById('city-search').value.trim();
+            if (!input) return;
+
+            const cleanQuery = encodeURIComponent(input);
+            
+            // Instantly transition the radar view context
+            document.getElementById('radar-widget').src = `https://windy.com{cleanQuery}`;
+        }
+
+        // Catch enter key instantly
+        document.getElementById('city-search').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') updateWidgets();
+        });
+    </script>
+</body>
+</html>
